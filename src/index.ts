@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser';
 const cors = require('cors')
 import express, { Application, NextFunction, Request, Response } from 'express';
+import AWS from 'aws-sdk';
 
 dotenv.config();
 
@@ -22,8 +23,6 @@ app.use(cors( {
 })) 
 
 
-
-
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
@@ -33,5 +32,18 @@ app.listen(PORT, () => {
 const router = express.Router();
 
 router.use('/user', require('./routes/user'));
+router.use('/product', require('./routes/product'));
 
 app.use('', router);
+
+
+AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+
+AWS.config.getCredentials(function(err) {
+  if (err) console.log(err.stack); 
+  // credentials not loaded
+});
+

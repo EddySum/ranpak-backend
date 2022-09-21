@@ -55,7 +55,7 @@ router.post('/register', async (req: Request, res: Response) => {
         password: hashedPass
       })
   
-      return res.json({}).status(200).send();
+      return res.status(200).json({}).send();
     } catch(e) {
       res.status(400).json(e);
     }
