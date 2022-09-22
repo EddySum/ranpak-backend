@@ -21,16 +21,15 @@ router.post('/login', async (req: Request, res: Response) => {
         const session = await Session.create({userID: user._id});
         res.cookie('session', session._id, { signed: true, httpOnly: true });
         
-        return res.status(200).json({}).send();
+        return res.status(200).json({});
       }
     }
   
     return res.status(422).json({
       errMsg: 'Incorrect Username or Password'
-    }).send();
+    });
   } catch(e) {
-    console.log(e)
-    return res.status(400).json(e).send();
+    return res.status(400).json(e);
   }
 });
 
@@ -39,7 +38,7 @@ router.post('/register', async (req: Request, res: Response) => {
       const { email, password } = req.body;
 
       const userExists = await User.findOne({email});
-      if(userExists) return res.status(422).json({errMsg: 'A user with this email already exists'}).send();
+      if(userExists) return res.status(422).json({errMsg: 'A user with this email already exists'});
 
       if (!(/^(?=.*[(*@%$)])(?=.*[A-Z])(?=.*[0-9]).{8,}$/.test(password))) {
           return res.status(422).json({errMsg: `${password} is not a valid password. Please ensure the password matches the following rules: \n \t A special character must be included: (*@%$) \n\t * At least one capital letter \n\t * At least one number`}) 
@@ -55,7 +54,7 @@ router.post('/register', async (req: Request, res: Response) => {
         password: hashedPass
       })
   
-      return res.status(200).json({}).send();
+      return res.status(200).json({});
     } catch(e) {
       res.status(400).json(e);
     }
@@ -75,7 +74,7 @@ router.get('/', [authenticate()], async (req: Request, res: Response) => {
 
       return res.status(200).json(userInfo);
     } catch(e) {
-      res.status(400).json(e);
+      return res.status(400).json(e);
     }
 });
 

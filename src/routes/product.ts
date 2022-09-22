@@ -21,7 +21,7 @@ const uploadMw = multer({
 router.post('/', [authenticate(), uploadMw], async (req: Request, res: Response) => {
   try {
         const userID = res.locals.userID;
-        const { productId, name, info, referenceNumber, country} = req.body;
+        const { productId, name, info, referenceNumber, country} = JSON.parse(req.body.data);
 
         const files = req.files as unknown as {[fieldName: string] : Express.Multer.File[]}
         const image = files?.['image']?.[0];
@@ -57,7 +57,7 @@ router.post('/', [authenticate(), uploadMw], async (req: Request, res: Response)
             return res.status(422).send;
         }
 
-       return res.status(200).json(product).send();
+       return res.status(200).json(product);
     } catch(e) {
       res.status(400).json(e);
     }
@@ -70,9 +70,9 @@ router.get('/', [authenticate()], async (req: Request, res: Response) => {
   
         const products = await Product.find({userId: userID});
         
-        res.status(200).json(products).send();
+        return res.status(200).json(products);
       } catch(e) {
-        res.status(400).json(e);
+        return res.status(400).json(e);
       }
 });
 
@@ -87,7 +87,6 @@ router.patch('/:id', [authenticate(), uploadMw], async (req: Request, res: Respo
         const image = files?.['image']?.[0];
         const file = files?.['file']?.[0];
 
-        console.log(req.body.file)
 
         const imgPayload = file ? {
             // @ts-ignore - field exists with s3-multer library. TODO: Fix typing by multer library
@@ -123,10 +122,26 @@ router.patch('/:id', [authenticate(), uploadMw], async (req: Request, res: Respo
         // TODO: Get original Product s3 links and delete the s3 file. This should reduce s3 costs.
         const product = await Product.findOneAndUpdate({userId: userID, _id: id}, productChanges, {new: true});
         
-        res.status(200).json(product).send();
+        return res.status(200).json(product);
       } catch(e) {
-        res.status(400).json(e);
+        return res.status(400).json(e);
       }
+});
+
+router.delete('/:id', [authenticate()], async (req: Request, res: Response) => {
+  try {
+      const { id } = req.params;
+
+      const userID = res.locals.userID;
+  
+      // TODO: Get original Product s3 links and delete the s3 file. This should reduce s3 costs.
+      const deleteResp = await Product.findOneAndDelete({userId: userID, _id: id});
+      if(!deleteResp) throw Error('Deletion failed');
+      
+      return res.status(200).json({});
+    } catch(e) {
+      return res.status(400).json(e);
+    }
 });
 
 

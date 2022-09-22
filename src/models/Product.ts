@@ -10,12 +10,12 @@ export interface IProduct extends Document {
   userId: mongoose.Schema.Types.ObjectId,
   productId: string, // Not to be confused with the mongo uid
   name: string,
-  info: string,
-  referenceNumber: number,
-  country: string,
+  info?: string,
+  referenceNumber?: number,
+  country?: string,
 
-  image: File
-  file: File
+  image?: File
+  file?: File
   createdAt: Date,
   updatedAt: Date
 }
@@ -30,7 +30,7 @@ const ProductSchema: Schema = new Schema({
     type: String, 
     required: true,
     minLength: 1,
-    maxLength: 32
+    maxLength: 16
   },
   name: {
     type: String, 
@@ -42,13 +42,13 @@ const ProductSchema: Schema = new Schema({
     type: String, 
     required: false,
     minLength: 1,
-    maxLength: 256
+    maxLength: 120
   },
   referenceNumber: {
     type: Number, 
     required: false,
-    minLength: 1,
-    maxLength: 32,
+    minLength: 0,
+    maxLength: 99999999,
     set: (v: number) => Math.round(v),
   },
   country: {
