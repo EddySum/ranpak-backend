@@ -79,4 +79,16 @@ router.get('/', [authenticate()], async (req: Request, res: Response) => {
 });
 
 
+router.post('/logout', [authenticate()], async (req: Request, res: Response) => {
+  if (req.signedCookies && req.signedCookies['session']) {
+    const session = await Session.findByIdAndDelete(req.signedCookies['session']);
+    res.clearCookie('session');
+    if (session) {
+      return res.status(200).json({});
+    }
+  }
+  return res.status(400).json();
+});
+
+
 module.exports = router;

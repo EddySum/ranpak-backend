@@ -81,7 +81,7 @@ router.patch('/:id', [authenticate(), uploadMw], async (req: Request, res: Respo
         const { id } = req.params;
   
         const userID = res.locals.userID;
-        const { productId, name, info, referenceNumber, country} = req.body;
+        const { productId, name, info, referenceNumber, country} = JSON.parse(req.body.data);
 
         const files = req.files as unknown as {[fieldName: string] : Express.Multer.File[]}
         const image = files?.['image']?.[0];
