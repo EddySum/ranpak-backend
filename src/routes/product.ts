@@ -16,7 +16,8 @@ const uploadMw = multer({
     storage: multerS3({
       s3: s3,
       bucket: `${process.env.BUCKET_NAME}`
-    })
+    }),
+    limits: { fileSize: 104857600 }
 }).fields([{ name: 'image', maxCount: 1 }, { name: 'file', maxCount: 1 }])
 router.post('/', [authenticate(), uploadMw], async (req: Request, res: Response) => {
   try {
