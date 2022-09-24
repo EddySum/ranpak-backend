@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser';
 const cors = require('cors')
-import express, { Application, NextFunction, Request, Response } from 'express';
-import AWS from 'aws-sdk';
+import express, { Application, NextFunction, Response } from 'express';
+import AWS, { Request } from 'aws-sdk';
 
 dotenv.config();
 
@@ -28,6 +28,11 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
+
+app.get('/', (req: any, res: Response) => {
+  res.status(200).json({});
+});
+
 
 const router = express.Router();
 
