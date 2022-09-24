@@ -19,7 +19,7 @@ app.use(cookieParser(process.env['COOKIE_SECRET']));
 // TODO: Setup dynamic cors policy when deploying
 app.use(cors( {
   credentials: true,
-  origin: "http://localhost:4200 " // client address
+  origin: `${process.env.origin}` // client address
 })) 
 
 
@@ -38,8 +38,8 @@ app.use('', router);
 
 
 AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+    accessKeyId: process.env.ACCESS_KEY_ID,
+    secretAccessKey: process.env.SECRET_ACCESS_KEY
 });
 
 AWS.config.getCredentials(function(err) {
