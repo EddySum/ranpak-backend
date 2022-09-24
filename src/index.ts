@@ -14,13 +14,21 @@ mongoose.connection.on('error', (err) => {
 
 const app: Application = express();
 
-app.use(express.json());
-app.use(cookieParser(process.env['COOKIE_SECRET']));
-// TODO: Setup dynamic cors policy when deploying
+app.enable('trust proxy');
+app.options('*', cors({
+  origin: `${process.env.origin}`
+}))
 app.use(cors( {
   credentials: true,
   origin: `${process.env.origin}` // client address
 })) 
+app.use(express.json());
+app.use(cookieParser(process.env['COOKIE_SECRET']));
+// TODO: Setup dynamic cors policy when deploying
+
+
+
+
 
 
 const PORT = process.env.PORT || 3000;

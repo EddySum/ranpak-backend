@@ -3,13 +3,14 @@ import {Router, Request, Response} from 'express';
 import bcrypt from 'bcrypt';
 import Session from '../models/Session';
 import { authenticate } from '../middlewares/auth';
+const cors = require('cors')
 
 
 
 const router = Router();
 const saltRounds = 3; // 12+ for production. Will be used in register route
 
-router.post('/login', async (req: Request, res: Response) => {
+router.post('/login', cors(),  async (req: Request, res: Response) => {
   try {
     const {email, password} = req.body;
   
