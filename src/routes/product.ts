@@ -6,7 +6,10 @@ const multer  = require('multer');
 const multerS3 = require('multer-s3')
 import AWS from 'aws-sdk';
 
-const s3 = new AWS.S3();
+const s3 = new AWS.S3({
+  accessKeyId: process.env.ACCESS_KEY_ID,
+  secretAccessKey: process.env.SECRET_ACCESS_KEY
+});
 
 
 const router = Router();

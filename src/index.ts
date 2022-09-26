@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser';
 const cors = require('cors')
-import express, { Application, NextFunction, Response } from 'express';
 import AWS, { Request } from 'aws-sdk';
+import express, { Application, NextFunction} from 'express';
 
 dotenv.config();
 
@@ -37,10 +37,6 @@ app.listen(PORT, () => {
     console.log(`Server is listening on port ${PORT}`);
 });
 
-app.get('/', (req: any, res: Response) => {
-  res.status(200).json({});
-});
-
 
 const router = express.Router();
 
@@ -50,13 +46,4 @@ router.use('/product', require('./routes/product'));
 app.use('', router);
 
 
-AWS.config.update({
-    accessKeyId: process.env.ACCESS_KEY_ID,
-    secretAccessKey: process.env.SECRET_ACCESS_KEY
-});
-
-AWS.config.getCredentials(function(err) {
-  if (err) console.log(err.stack); 
-  // credentials not loaded
-});
 
