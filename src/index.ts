@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose'
 import cookieParser from 'cookie-parser';
 const cors = require('cors')
-import AWS, { Request } from 'aws-sdk';
 import express, { Application, NextFunction} from 'express';
+const path = require('path');
 
 dotenv.config();
 
@@ -14,10 +14,8 @@ mongoose.connection.on('error', (err) => {
 
 const app: Application = express();
 
-app.enable('trust proxy');
-app.options('*', cors({
-  origin: `${process.env.origin}`
-}))
+
+
 app.use(cors( {
   credentials: true,
   origin: `${process.env.origin}` // client address
@@ -44,6 +42,12 @@ router.use('/user', require('./routes/user'));
 router.use('/product', require('./routes/product'));
 
 app.use('', router);
+
+app.use(express.static(path.join(__dirname, '../../ranpak/dist/ranpak/')))
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../ranpak/dist/ranpak/index.html'))
+})
 
 
 
